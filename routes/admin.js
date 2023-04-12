@@ -3,6 +3,8 @@ const router = express.Router();
 const middleware = require("../middleware/index.js");
 const User = require("../models/user.js");
 const Donation = require("../models/donation.js");
+const nodemailer = require('nodemailer');
+
 
 
 router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req,res) => {
@@ -110,20 +112,86 @@ router.get("/admin/donation/assign/:donationId", middleware.ensureAdminLoggedIn,
 	}
 });
 
-router.post("/admin/donation/assign/:donationId", middleware.ensureAdminLoggedIn, async (req,res) => {
-	try
-	{
+router.post("/admin/donation/assign/:donationId", middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
 		const donationId = req.params.donationId;
-		const {agent, adminToAgentMsg} = req.body;
-		await Donation.findByIdAndUpdate(donationId, { status: "assigned", agent, adminToAgentMsg });
-		req.flash("success", "Agent assigned successfully");
-		res.redirect(`/admin/donation/view/${donationId}`);
-	}
-	catch(err)
-	{
-		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
-		res.redirect("back");
+		const { agent, adminToAgentMsg } = req.body;
+		await Donation.findByIdAndUpdate(
+			donationId,
+			{ status: "assigned", agent, adminToAgentMsg },
+			{ new: true }
+		  )
+			.populate("donor")
+			.populate("agent");
+	  const donation = await Donation.findById(donationId);
+	  const agentId = donation.agent
+
+	  
+	  const agentUser = await User.findById(agentId);
+	  
+	  const agentEmail = agentUser.email;
+	  const agentName = agentUser.firstName + " " + agentUser.lastName;
+ 	
+	//   const { agent, adminToAgentMsg } = req.body;
+	//   await Donation.findByIdAndUpdate(
+	// 	donationId,
+	// 	{ status: "assigned", agent, adminToAgentMsg },
+	// 	{ new: true }
+	//   )
+	// 	.populate("donor")
+	// 	.populate("agent");
+		
+	//const agentEmail = agent.email;
+
+  
+	  const transporter = await nodemailer.createTransport({
+		service:"gmail", 
+		auth: {
+		  user: 'aaharayojan@gmail.com',
+		  pass: 'lwxdqyxmdwpvvufp',
+		},
+	})
+		
+	const message = {
+		from: 'aaharayojan@gmail.com',
+		to: agentEmail,
+		subject: 'Donation Assigned',
+		text: "Hello " + agentName + 
+		",You have been assigned with a donation, details of which are as follows: \n Food Type :"
+		+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
+		+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Donor Message :" + donation.donorToAdminMsg 
+	};
+	
+	transporter.sendMail(message, function(error, info){
+		if (error) {
+			console.log(error);
+		} else {
+			console.log('Email sent: ' + info.response);
+		}
+	});
+	
+// 	module.exports = {
+// 		sendEmailToAgent
+// 	};
+	  
+// 	  /*const mailOptions = {
+// 		from: "aaharayojan@gmail.com",
+// 		to: agentEmail,
+// 		subject: "New Donation Assignment",
+// 		text: `A new donation of has been assigned to you.`,
+// 	  };*/
+  
+// 	  //await transporter.sendMail(mailOptions);
+
+	  
+  
+	  req.flash("success", "Agent assigned successfully");
+	  res.redirect(`/admin/donation/view/${donationId}`);
+	
+}catch (err) {
+	  console.log(err);
+	  req.flash("error", "Some error occurred on the server.");
+	  res.redirect("back");
 	}
 });
 
