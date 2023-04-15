@@ -68,7 +68,46 @@ router.get("/admin/donation/accept/:donationId", middleware.ensureAdminLoggedIn,
 	try
 	{
 		const donationId = req.params.donationId;
-		await Donation.findByIdAndUpdate(donationId, { status: "accepted" });
+		await Donation.findByIdAndUpdate(donationId, { status: "accepted" })
+
+		.populate("donor")
+		.populate("agent");
+		const donation = await Donation.findById(donationId);
+	  const donorId = donation.donor
+
+	  
+	  const donorUser = await User.findById(donorId);
+	  
+	  const donorEmail = donorUser.email;
+	  const donorName = donorUser.firstName + " " + donorUser.lastName;
+
+	  const transporter = await nodemailer.createTransport({
+		service:"gmail", 
+		auth: {
+		  user: 'aaharayojan@gmail.com',
+		  pass: 'lwxdqyxmdwpvvufp',
+		},
+	})
+		
+	const message = {
+		from: 'aaharayojan@gmail.com',
+		to: donorEmail,
+		subject: 'Donation accepted',
+		text: "Hello, "  + 
+		"\n Thank you for your valuable donation! \n Your donation request has been accepted by the admin and will be prosessed further with agent allocation soon. \n Please keep a track of the request. \n Details are - \n Food Type :"
+		+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
+		+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Expiration Time :" + donation.donorToAdminMsg + "\n Thank you, Regards\n Aahar Ayojan!" 
+	};
+	
+	transporter.sendMail(message, function(error, info){
+		if (error) {
+			console.log(error);
+		} else {
+			console.log('Email sent: ' + info.response);
+		}
+	});
+
+
 		req.flash("success", "Donation accepted successfully");
 		res.redirect(`/admin/donation/view/${donationId}`);
 	}
@@ -84,7 +123,44 @@ router.get("/admin/donation/reject/:donationId", middleware.ensureAdminLoggedIn,
 	try
 	{
 		const donationId = req.params.donationId;
-		await Donation.findByIdAndUpdate(donationId, { status: "rejected" });
+		await Donation.findByIdAndUpdate(donationId, { status: "rejected" })
+
+
+		.populate("donor")
+		.populate("agent");
+		const donation = await Donation.findById(donationId);
+	  const donorId = donation.donor
+
+	  
+	  const donorUser = await User.findById(donorId);
+	  
+	  const donorEmail = donorUser.email;
+	  const donorName = donorUser.firstName + " " + donorUser.lastName;
+
+	  const transporter = await nodemailer.createTransport({
+		service:"gmail", 
+		auth: {
+		  user: 'aaharayojan@gmail.com',
+		  pass: 'lwxdqyxmdwpvvufp',
+		},
+	})
+		
+	const message = {
+		from: 'aaharayojan@gmail.com',
+		to: donorEmail,
+		subject: 'Donation rejected',
+		text: "Hello," +  
+		"\n Thank you for the donation request. \n But due to some unavoidable circumstances your donation request has been rejected. We apologize for any inconvinience if occured. \n Thank you, Regards \n Aahar ayojan" 
+	};
+	
+	transporter.sendMail(message, function(error, info){
+		if (error) {
+			console.log(error);
+		} else {
+			console.log('Email sent: ' + info.response);
+		}
+	});
+
 		req.flash("success", "Donation rejected successfully");
 		res.redirect(`/admin/donation/view/${donationId}`);
 	}
@@ -157,9 +233,9 @@ router.post("/admin/donation/assign/:donationId", middleware.ensureAdminLoggedIn
 		to: agentEmail,
 		subject: 'Donation Assigned',
 		text: "Hello " + agentName + 
-		",You have been assigned with a donation, details of which are as follows: \n Food Type :"
+		",\n You have been assigned with a donation, details of which are as follows: \n Food Type :"
 		+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
-		+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Donor Message :" + donation.donorToAdminMsg 
+		+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Expiration Time :" + donation.donorToAdminMsg 
 	};
 	
 	transporter.sendMail(message, function(error, info){

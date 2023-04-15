@@ -3,6 +3,7 @@ const router = express.Router();
 const middleware = require("../middleware/index.js");
 const User = require("../models/user.js");
 const Donation = require("../models/donation.js");
+const nodemailer = require("nodemailer");
 
 
 router.get("/donor/dashboard", middleware.ensureDonorLoggedIn, async (req,res) => {
@@ -29,6 +30,38 @@ router.post("/donor/donate", middleware.ensureDonorLoggedIn, async (req,res) => 
 		donation.donor = req.user._id;
 		const newDonation = new Donation(donation);
 		await newDonation.save();
+
+		const transporter = await nodemailer.createTransport({
+			service:"gmail", 
+			auth: {
+			  user: 'aaharayojan@gmail.com',
+			  pass: 'lwxdqyxmdwpvvufp',
+			},
+		})
+
+		const admins = await User.find({ role: "admin" });
+const adminEmails = admins.map((admin) => admin.email);
+const adminName = admins.firstName + " " + admins.lastName;
+//const subject = "New donation submitted";
+//const text = "A new donation has been submitted. Please log in to the dashboard to review it.";
+const message = {
+	from: 'aaharayojan@gmail.com',
+	to: adminEmails,
+	subject: 'New donation submitted',
+	text: "Hello "  +
+	",\n A new donation has been submitted with the following details. Please log in to the dashboard to review it. \n Food Type :"
+	+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
+	+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Expiration Time :" + donation.donorToAdminMsg 
+};
+
+transporter.sendMail(message, function(error, info){
+	if (error) {
+		console.log(error);
+	} else {
+		console.log('Email sent: ' + info.response);
+	}
+});
+
 		req.flash("success", "Donation request sent successfully");
 		res.redirect("/donor/donations/pending");
 	}

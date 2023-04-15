@@ -1,12 +1,47 @@
-<h1 class="m-4 color-theme">Contact us</h1>
+
+
+<h1 class="m-4 color-theme">Contact Us</h1>
 	
 <div class="bg-white m-4 p-4 shadow">
-	<ul class="fs-5">
-		<li>For any concerns, please contact us at the following email address</li>
-		<ul>
-			<li>aaharayojan@gmail.com</li>
+	<div class="row">
+		<div class="col-md-6">
 			
-		</ul>
-		<li>You can email us your suggestions and feedbacks here <li>
-	</ul>
+			<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113579.63882713381!2d77.89761039941166!3d27.176303144296273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39740d857c2f41d9%3A0x784aef38a9523b42!2sAgra%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1681557207379!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+		</div>
+		<div class="col-md-6">
+			<h2>Get In Touch</h2>
+			<p>If you have any questions, comments, or concerns, please don't hesitate to reach out to us at:</p>
+			<p><strong>Email:</strong> <a href="mailto:aaharayojan@gmail.com">aaharayojan@gmail.com</a></p>
+			<p>Alternatively, you can fill out the contact form below:</p>
+			<form action="/contact" method="POST">
+				<div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" name="name" class="form-control" required>
+				</div>
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="email" name="email" class="form-control" required>
+				</div>
+				<div class="form-group">
+					<label for="message">Message</label>
+					<textarea name="message" class="form-control" rows="5" required></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Send Message</button>
+			</form>
+		</div>
+	</div>
 </div>
+
+<footer class="bg-dark text-white p-4">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<p>&copy; 2023 Aahar Ayojan. All rights reserved.</p>
+			</div>
+			<div class="col-md-6 text-end">
+				<a href="mailto:aaharayojan@gmail.com" class="btn btn-outline-light"><i class="fas fa-envelope"></i> Email Us</a>
+			</div>
+		</div>
+	</div>
+</footer>
+
