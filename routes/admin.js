@@ -93,10 +93,10 @@ router.get("/admin/donation/accept/:donationId", middleware.ensureAdminLoggedIn,
 		from: 'aaharayojan@gmail.com',
 		to: donorEmail,
 		subject: 'Donation accepted',
-		text: "Hello, "  + 
-		"\n Thank you for your valuable donation! \n Your donation request has been accepted by the admin and will be prosessed further with agent allocation soon. \n Please keep a track of the request. \n Details are - \n Food Type :"
-		+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
-		+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Expiration Time :" + donation.donorToAdminMsg + "\n Thank you, Regards\n Aahar Ayojan!" 
+		text: "Hello,\n "  + 
+		"\nThank you for your valuable donation! \n Your donation request has been accepted by the admin and will be prosessed further with agent allocation soon. \nPlease keep a track of the request. \nDetails are - \nFood Type :"
+		+ donation.foodType + "\nQuantity :" + donation.quantity + "\nCooking Time :" + donation.cookingTime
+		+ "\nAddress :" + donation.address + "\nPhone Number :" + donation.phone + "\nExpiration Time :" + donation.donorToAdminMsg + "\n\nThank you, Regards\n Aahar Ayojan!" 
 	};
 	
 	transporter.sendMail(message, function(error, info){
@@ -149,8 +149,8 @@ router.get("/admin/donation/reject/:donationId", middleware.ensureAdminLoggedIn,
 		from: 'aaharayojan@gmail.com',
 		to: donorEmail,
 		subject: 'Donation rejected',
-		text: "Hello," +  
-		"\n Thank you for the donation request. \n But due to some unavoidable circumstances your donation request has been rejected. We apologize for any inconvinience if occured. \n Thank you, Regards \n Aahar ayojan" 
+		text: "Hello\n," +  
+		"\nThank you for the donation request. \nBut due to some unavoidable circumstances your donation request has been rejected. We apologize for any inconvinience if occured. \n\nThank you, Regards \nAahar ayojan" 
 	};
 	
 	transporter.sendMail(message, function(error, info){
@@ -233,9 +233,9 @@ router.post("/admin/donation/assign/:donationId", middleware.ensureAdminLoggedIn
 		to: agentEmail,
 		subject: 'Donation Assigned',
 		text: "Hello " + agentName + 
-		",\n You have been assigned with a donation, details of which are as follows: \n Food Type :"
-		+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
-		+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Expiration Time :" + donation.donorToAdminMsg 
+		",\nYou have been assigned with a donation, details of which are as follows: \nFood Type :"
+		+ donation.foodType + "\nQuantity :" + donation.quantity + "\nCooking Time :" + donation.cookingTime
+		+ "\nAddress :" + donation.address + "\nPhone Number :" + donation.phone + "\nExpiration Time :" + donation.donorToAdminMsg + "\n\nPlease ensure timely distribution.\nThankyou."
 	};
 	
 	transporter.sendMail(message, function(error, info){

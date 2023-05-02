@@ -94,8 +94,8 @@ const message = {
 	from: 'aaharayojan@gmail.com',
 	to: adminEmails,
 	subject: 'Donation collected',
-	text: "Hello, "  +
-	"\n This is a confirmation mail towards a succesfull collection of the assigned donation request."
+	text: "Hello\n, "  +
+	"\nPlease treat his is a confirmation mail towards a succesfull collection of the assigned donation request." + "\nThankyou."
 };
 
 

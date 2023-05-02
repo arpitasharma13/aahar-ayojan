@@ -48,10 +48,10 @@ const message = {
 	from: 'aaharayojan@gmail.com',
 	to: adminEmails,
 	subject: 'New donation submitted',
-	text: "Hello "  +
-	",\n A new donation has been submitted with the following details. Please log in to the dashboard to review it. \n Food Type :"
-	+ donation.foodType + "\n Quantity :" + donation.quantity + "\n Cooking Time :" + donation.cookingTime
-	+ "\n Address :" + donation.address + "\n Phone Number :" + donation.phone + "\n Expiration Time :" + donation.donorToAdminMsg 
+	text: "Hello,\n "  +
+	"\nA new donation has been submitted with the following details. Please log in to the dashboard to review it. \nFood Type :"
+	+ donation.foodType + "\nQuantity :" + donation.quantity + "\nCooking Time :" + donation.cookingTime
+	+ "\nAddress :" + donation.address + "\nPhone Number :" + donation.phone + "\nExpiration Time :" + donation.donorToAdminMsg 
 };
 
 transporter.sendMail(message, function(error, info){
